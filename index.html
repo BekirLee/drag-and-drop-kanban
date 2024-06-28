@@ -13,16 +13,29 @@
 
 <body>
   <div class="board">
-    <!-- <form id="todo-form"> -->
-    <input type="text" placeholder="New TODO..." id="todo-input" />
-    <button type="submit" class="add-task">Add Task</button>
-    <div class="drop-down--menu disabled">
+    <button class="add-tasks">Add Task</button>
+    <div class="menu disabled">
 
+      <form id="todo-form">
+        <input type="text" placeholder="New TODO..." id="todo-input" />
+        <button type="submit">Add +</button>
+        <!-- <select>
+          <option value="none"></option>
+          <option value="todo-lane">todo-lane</option>
+          <option value="doing-lane">doing</option>
+        </select> -->
+        <button class="add-task">Add </button>
+        <div class="drop-down--menu disabled">
+          <button class="btn btn-todo">todo</button>
+          <button class="btn btn-doing">doing</button>
+          <button class="btn btn-done">done</button>
+        </div>
+
+      </form>
     </div>
-    <!-- </form> -->
 
     <div class="lanes">
-      <div class="swim-lane" id="todo-lane">
+      <div class="swim-lane" id="todo">
         <h3 class="heading">TODO</h3>
 
         <p class="task" draggable="true">Get groceries</p>
@@ -30,13 +43,13 @@
         <p class="task" draggable="true">Mow the lawn</p>
       </div>
 
-      <div class="swim-lane" id="doing-lane">
+      <div class="swim-lane" id="doing">
         <h3 class="heading">Doing</h3>
 
         <p class="task" draggable="true">Binge 80 hours of Game of Thrones</p>
       </div>
 
-      <div class="swim-lane">
+      <div class="swim-lane" id="done">
         <h3 class="heading">Done</h3>
 
         <p class="task" draggable="true">

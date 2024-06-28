@@ -1,0 +1,13 @@
+{
+    "progresses": [
+        {
+            "name": "todo"
+        },
+        {
+            "name": "doing"
+        },
+        {
+            "name": "done"
+        }
+    ]
+}
