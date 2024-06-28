@@ -1,6 +1,6 @@
 const form = document.getElementById("todo-form");
 const input = document.getElementById("todo-input");
-const todoLane = document.getElementById("todo-lane");
+const todoLane = document.getElementById("doing-lane");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
