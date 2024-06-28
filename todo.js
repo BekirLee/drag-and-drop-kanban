@@ -1,6 +1,12 @@
 const form = document.getElementById("todo-form");
 const input = document.getElementById("todo-input");
 const todoLane = document.getElementById("doing-lane");
+const addTask = document.querySelector('.add-task');
+const menu = document.querySelector('.drop-down--menu');
+
+addTask.addEventListener('click', () => {
+  menu.classList.toggle('disabled')
+})
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
