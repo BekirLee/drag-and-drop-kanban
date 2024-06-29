@@ -1,4 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Board</title>
+  <!-- <style>
+    .board {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .column {
+      width: 30%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .task {
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task button {
+      margin-left: 10px;
+    }
+  </style> -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div>
+    <input type="text" id="new-task-title" placeholder="Yeni Görev">
+    <select id="new-task-status">
+      <option value="todo">To Do</option>
+      <option value="in-progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+    <button onclick="addTask()">Ekle</button>
+  </div>
+  <div class="board">
+    <div class="column" id="todo">
+      <h3>To Do</h3>
+    </div>
+    <div class="column" id="in-progress">
+      <h3>In Progress</h3>
+    </div>
+    <div class="column" id="done">
+      <h3>Done</h3>
+    </div>
+  </div>
+  <script src="todo.js"></script>
+  <script src="drag.js"></script>
+</body>
+
+</html>
+
+
+<!-- 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +105,7 @@
   <script src="drag.js"></script>
 </body>
 
-</html>
+</html> -->
 
 <!-- <!DOCTYPE html>
 <html lang="en">

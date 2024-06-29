@@ -101,7 +101,15 @@ function dragdrop(tasks) {
   })
 }
 
-function addTask(title, status) {
+function addTask() {
+  const title = document.getElementById('new-task-title').value;
+  const status = document.getElementById('new-task-status').value;
+
+  if (title === '') {
+    alert('Görev başlığını giriniz');
+    return;
+  }
+
   const newTask = {
     title: title,
     status: status
@@ -119,13 +127,13 @@ function addTask(title, status) {
       const taskElement = createTaskElement(task);
       if (task.status === 'todo') {
         document.getElementById('todo').appendChild(taskElement);
-        document.getElementById('new-todo--task').value = ''
+        document.getElementById('new-task-title').value = ''
       } else if (task.status === 'in-progress') {
         document.getElementById('in-progress').appendChild(taskElement);
-        document.getElementById('new-in-progress--task').value = ''
+        document.getElementById('new-task-title').value = ''
       } else if (task.status === 'done') {
         document.getElementById('done').appendChild(taskElement);
-        document.getElementById('new-done--task').value = ''
+        document.getElementById('new-task-title').value = ''
       }
     })
     .catch(error => console.error('Error:', error));
