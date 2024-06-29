@@ -135,10 +135,25 @@ function createTaskElement(task) {
   taskElement.className = 'task';
   taskElement.innerText = task.title;
   taskElement.dataset.id = task.id;
-  
-  console.log(document.querySelector('.task'));
 
-  console.log(task);
+  const tasks = document.querySelectorAll('.task');
+  tasks.forEach(task => {
+    task.addEventListener("dragstart", () => {
+      task.classList.add("is-dragging");
+    });
+    task.addEventListener("dragend", () => {
+      task.classList.remove("is-dragging");
+    });
+    // console.log(task.classList.add(''))
+  })
+  // tasks.addEventListener("dragstart", () => {
+  //   task.classList.add("is-dragging");
+  // });
+  // tasks.addEventListener("dragend", () => {
+  //   task.classList.remove("is-dragging");
+  // });
+
+  // console.log(task);
 
   const deleteButton = document.createElement('button');
   deleteButton.innerText = 'delete';
