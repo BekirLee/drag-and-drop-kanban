@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const todoColumn = document.getElementById('todo');
       const inProgressColumn = document.getElementById('in-progress');
       const doneColumn = document.getElementById('done');
+      const btns = document.querySelector('button[type="submit"]')
 
       data.forEach(task => {
         const taskElement = createTaskElement(task);
@@ -173,3 +174,12 @@ function deleteTask(id) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+const forms = document.querySelectorAll('form')
+forms.forEach(form => {
+  // console.log(btn)
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+  })
+
+})
