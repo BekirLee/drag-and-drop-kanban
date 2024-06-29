@@ -1,4 +1,4 @@
-const draggables = document.querySelectorAll(".task");
+var draggables = document.querySelectorAll(".task");
 const droppables = document.querySelectorAll(".column");
 
 draggables.forEach((task) => {
@@ -11,6 +11,7 @@ draggables.forEach((task) => {
   });
 });
 
+console.log(draggables);
 droppables.forEach((zone) => {
   zone.addEventListener("dragover", (e) => {
     e.preventDefault();
