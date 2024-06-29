@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -19,11 +19,7 @@
       <form id="todo-form">
         <input type="text" placeholder="New TODO..." id="todo-input" />
         <button type="submit">Add +</button>
-        <!-- <select>
-          <option value="none"></option>
-          <option value="todo-lane">todo-lane</option>
-          <option value="doing-lane">doing</option>
-        </select> -->
+    
         <button class="add-task">Add </button>
         <div class="drop-down--menu disabled">
           <button class="btn btn-todo">todo</button>
@@ -60,6 +56,69 @@
   </div>
   <script src="drag.js"></script>
   <script src="todo.js"></script>
+</body>
+
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Board</title>
+  <style>
+    .board {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .column {
+      width: 30%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .task {
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="board">
+    <div class="column" id="todo">
+      <h3>To Do</h3>
+      <input type="text" id="new-todo--task" placeholder="New task">
+      <button onclick="addTask(document.getElementById('new-todo--task').value, 'todo')">Add</button>
+    </div>
+    <div class="column" id="in-progress">
+      <h3>In Progress</h3>
+      <input type="text" id="new-in-progress--task" placeholder="New task">
+      <button onclick="addTask(document.getElementById('new-in-progress--task').value, 'in-progress')">Add</button>
+    </div>
+    <div class="column" id="done">
+      <h3>Done</h3>
+      <input type="text" id="new-done--task" placeholder="New task">
+      <button onclick="addTask(document.getElementById('new-done--task').value, 'done')">Add</button>
+    </div>
+  </div>
+  <script src="todo.js"></script>
+  <!-- <script src="drag.js"></script> -->
 </body>
 
 </html>

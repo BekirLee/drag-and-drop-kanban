@@ -1,7 +1,8 @@
 const draggables = document.querySelectorAll(".task");
-const droppables = document.querySelectorAll(".swim-lane");
+const droppables = document.querySelectorAll(".column");
 
 draggables.forEach((task) => {
+  console.log(task)
   task.addEventListener("dragstart", () => {
     task.classList.add("is-dragging");
   });

@@ -1,74 +1,160 @@
-const form = document.getElementById("todo-form");
-const input = document.getElementById("todo-input");
+// const form = document.getElementById("todo-form");
+// const input = document.getElementById("todo-input");
+// const body = document.querySelector('body')
 
-let todo = document.getElementById("todo");
-let doing = document.getElementById("doing");
-let done = document.getElementById("done");
+// let todo = document.getElementById("todo");
+// let doing = document.getElementById("doing");
+// let done = document.getElementById("done");
 
-const addTask = document.querySelector('.add-task');
-const addTasks = document.querySelector('.add-tasks');
-const menu = document.querySelector('.drop-down--menu');
-const menus = document.querySelector('.menu');
+// const addTask = document.querySelector('.add-task');
+// const addTasks = document.querySelector('.add-tasks');
+// const menu = document.querySelector('.drop-down--menu');
+// const menus = document.querySelector('.menu');
 
-const btns = document.querySelectorAll('.btn');
-let selectedCol = todo;
+// const btns = document.querySelectorAll('.btn');
+// let selectedCol = todo;
 
-document.querySelector('.btn-todo').addEventListener('click', () => {
-  selectedCol = todo;
+// document.querySelector('.btn-todo').addEventListener('click', () => {
+//   selectedCol = todo;
+// });
+
+// document.querySelector('.btn-doing').addEventListener('click', () => {
+//   selectedCol = doing;
+// });
+
+// document.querySelector('.btn-done').addEventListener('click', () => {
+//   selectedCol = done;
+// });
+
+// addTask.addEventListener('click', () => {
+//   menu.classList.toggle('disabled')
+// })
+
+// addTasks.addEventListener('click', () => {
+//   menus.classList.toggle('disabled');
+//   body.classList.toggle('body-color')
+// })
+
+// form.addEventListener("submit", (e) => {
+//   e.preventDefault();
+//   const value = input.value;
+
+//   if (!value) return;
+
+//   const newTask = document.createElement("p");
+//   newTask.classList.add("task");
+//   newTask.setAttribute("draggable", "true");
+//   newTask.innerText = value;
+
+//   newTask.addEventListener("dragstart", () => {
+//     newTask.classList.add("is-dragging");
+//   });
+
+//   newTask.addEventListener("dragend", () => {
+//     newTask.classList.remove("is-dragging");
+//   });
+
+//   selectedCol.appendChild(newTask);
+
+//   input.value = "";
+// });
+
+document.addEventListener('DOMContentLoaded', function () {
+  fetch('http://localhost:3000/progresses')
+    .then(response => response.json())
+    .then(data => {
+      const todoColumn = document.getElementById('todo');
+      const inProgressColumn = document.getElementById('in-progress');
+      const doneColumn = document.getElementById('done');
+
+      data.forEach(task => {
+        const taskElement = createTaskElement(task);
+
+        // task.addEventListener("dragstart", () => {
+        //   task.classList.add("is-dragging");
+        // });
+        // task.addEventListener("dragend", () => {
+        //   task.classList.remove("is-dragging");
+        // });
+
+        if (task.status === 'todo') {
+          todoColumn.appendChild(taskElement);
+        } else if (task.status === 'in-progress') {
+          inProgressColumn.appendChild(taskElement);
+        } else if (task.status === 'done') {
+          doneColumn.appendChild(taskElement);
+        }
+      });
+    })
+    .catch(error => console.error('Error:', error));
 });
 
-document.querySelector('.btn-doing').addEventListener('click', () => {
-  selectedCol = doing;
-});
+function dragdrop(tasks) {
+  tasks.forEach(task => {
+    task.addEventListener("dragstart", () => {
+      task.classList.add("is-dragging");
+    });
+    task.addEventListener("dragend", () => {
+      task.classList.remove("is-dragging");
+    });
+  })
+}
 
-document.querySelector('.btn-done').addEventListener('click', () => {
-  selectedCol = done;
-});
+function addTask(title, status) {
+  const newTask = {
+    title: title,
+    status: status
+  };
 
-addTask.addEventListener('click', () => {
-  menu.classList.toggle('disabled')
-})
+  fetch('http://localhost:3000/progresses', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newTask)
+  })
+    .then(response => response.json())
+    .then(task => {
+      const taskElement = createTaskElement(task);
+      if (task.status === 'todo') {
+        document.getElementById('todo').appendChild(taskElement);
+        document.getElementById('new-todo--task').value = ''
+      } else if (task.status === 'in-progress') {
+        document.getElementById('in-progress').appendChild(taskElement);
+        document.getElementById('new-in-progress--task').value = ''
+      } else if (task.status === 'done') {
+        document.getElementById('done').appendChild(taskElement);
+        document.getElementById('new-done--task').value = ''
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
-addTasks.addEventListener('click', () => {
-  menus.classList.toggle('disabled')
-})
+function createTaskElement(task) {
+  const taskElement = document.createElement('div');
+  taskElement.className = 'task';
+  taskElement.innerText = task.title;
+  taskElement.dataset.id = task.id;
+  
+  console.log(document.querySelector('.task'));
 
-// console.log(todoLane)
+  console.log(task);
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const value = input.value;
+  const deleteButton = document.createElement('button');
+  deleteButton.innerText = 'delete';
+  deleteButton.onclick = () => deleteTask(task.id);
+  taskElement.appendChild(deleteButton);
 
-  if (!value) return;
+  return taskElement;
+}
 
-  const newTask = document.createElement("p");
-  newTask.classList.add("task");
-  newTask.setAttribute("draggable", "true");
-  newTask.innerText = value;
-
-  newTask.addEventListener("dragstart", () => {
-    newTask.classList.add("is-dragging");
-  });
-
-  newTask.addEventListener("dragend", () => {
-    newTask.classList.remove("is-dragging");
-  });
-
-  selectedCol.appendChild(newTask);
-
-
-  // btns.forEach((hell) => {
-  //   let btnContent = hell.textContent
-  //   if (btnContent == todo.textContent) {
-  //     todo.appenChild(newTask)
-  //   }
-  //   else if (btnContent == doing.textContent) {
-  //     doing.appendChild(newTask)
-  //   }
-  //   else {
-  //     done.appendChild(newTask);
-  //   }
-  // })
-
-  input.value = "";
-});
+function deleteTask(id) {
+  fetch(`http://localhost:3000/progresses/${id}`, {
+    method: 'DELETE'
+  })
+    .then(() => {
+      const taskElement = document.querySelector(`.task[data-id='${id}']`);
+      taskElement.parentNode.removeChild(taskElement);
+    })
+    .catch(error => console.error('Error:', error));
+}
