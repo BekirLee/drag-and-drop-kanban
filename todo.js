@@ -130,11 +130,14 @@ forms.forEach(form => {
   })
 
 })
+
 taskShow()
 function taskShow() {
   const mainTask = document.querySelector('.main-task--buton');
   const tasks = document.querySelector('.tasks');
+  const body = document.querySelector('body');
   mainTask.addEventListener('click', () => {
     tasks.classList.toggle('disabled')
+    body.classList.toggle('background-overlay');
   })
 }
