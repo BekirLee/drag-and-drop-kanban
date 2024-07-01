@@ -130,3 +130,11 @@ forms.forEach(form => {
   })
 
 })
+taskShow()
+function taskShow() {
+  const mainTask = document.querySelector('.main-task--buton');
+  const tasks = document.querySelector('.tasks');
+  mainTask.addEventListener('click', () => {
+    tasks.classList.toggle('disabled')
+  })
+}

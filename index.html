@@ -10,16 +10,17 @@
 </head>
 
 <body>
-  <div>
+  <button class="main-task--buton">Add Task</button>
+  <div class="tasks disabled">
     <input type="text" id="new-task-title" placeholder="Yeni Görev">
     <select id="new-task-status">
       <option value="todo">To Do</option>
       <option value="in-progress">In Progress</option>
       <option value="done">Done</option>
     </select>
-    <button onclick="addTask()">Ekle</button>
+    <button onclick="addTask()">Add</button>
   </div>
-  <div class="board">
+  <div class="board ">
     <div class="column" id="todo">
       <h3>To Do</h3>
     </div>

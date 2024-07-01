@@ -1,13 +1,16 @@
 {
   "progresses": [
     {
-      "name": "todo"
+      "name": "todo",
+      "id": "47a3"
     },
     {
-      "name": "doing"
+      "name": "doing",
+      "id": "0e85"
     },
     {
-      "name": "done"
+      "name": "done",
+      "id": "5240"
     },
     {
       "id": "1603",
@@ -102,6 +105,11 @@
     {
       "id": "f335",
       "title": "ada",
+      "status": "in-progress"
+    },
+    {
+      "id": "76ff",
+      "title": "nihad",
       "status": "in-progress"
     }
   ]
