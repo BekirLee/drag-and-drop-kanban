@@ -11,7 +11,6 @@ draggables.forEach((task) => {
   });
 });
 
-// console.log(draggables);
 droppables.forEach((zone) => {
   zone.addEventListener("dragover", (e) => {
     e.preventDefault();

@@ -1,64 +1,3 @@
-// const form = document.getElementById("todo-form");
-// const input = document.getElementById("todo-input");
-// const body = document.querySelector('body')
-
-// let todo = document.getElementById("todo");
-// let doing = document.getElementById("doing");
-// let done = document.getElementById("done");
-
-// const addTask = document.querySelector('.add-task');
-// const addTasks = document.querySelector('.add-tasks');
-// const menu = document.querySelector('.drop-down--menu');
-// const menus = document.querySelector('.menu');
-
-// const btns = document.querySelectorAll('.btn');
-// let selectedCol = todo;
-
-// document.querySelector('.btn-todo').addEventListener('click', () => {
-//   selectedCol = todo;
-// });
-
-// document.querySelector('.btn-doing').addEventListener('click', () => {
-//   selectedCol = doing;
-// });
-
-// document.querySelector('.btn-done').addEventListener('click', () => {
-//   selectedCol = done;
-// });
-
-// addTask.addEventListener('click', () => {
-//   menu.classList.toggle('disabled')
-// })
-
-// addTasks.addEventListener('click', () => {
-//   menus.classList.toggle('disabled');
-//   body.classList.toggle('body-color')
-// })
-
-// form.addEventListener("submit", (e) => {
-//   e.preventDefault();
-//   const value = input.value;
-
-//   if (!value) return;
-
-//   const newTask = document.createElement("p");
-//   newTask.classList.add("task");
-//   newTask.setAttribute("draggable", "true");
-//   newTask.innerText = value;
-
-//   newTask.addEventListener("dragstart", () => {
-//     newTask.classList.add("is-dragging");
-//   });
-
-//   newTask.addEventListener("dragend", () => {
-//     newTask.classList.remove("is-dragging");
-//   });
-
-//   selectedCol.appendChild(newTask);
-
-//   input.value = "";
-// });
-
 document.addEventListener('DOMContentLoaded', function () {
   fetch('http://localhost:3000/progresses')
     .then(response => response.json())
@@ -106,7 +45,7 @@ function addTask() {
   const status = document.getElementById('new-task-status').value;
 
   if (title === '') {
-    alert('Görev başlığını giriniz');
+    alert('Title plz');
     return;
   }
 
