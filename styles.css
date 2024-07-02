@@ -97,11 +97,13 @@
 .tasks {
   width: 500px;
   height: 500px;
-  background-color: antiquewhite;
+  background-color: #fff;
   position: absolute;
   /* top: 50%; */
   left: 50%;
   transform: translate(-50%, 0%);
+  border-radius: 6px;
+  padding: 30px;
 }
 
 .background-overlay {
