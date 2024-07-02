@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -21,6 +21,45 @@
     <button onclick="addTask()">Add</button>
   </div>
   <div class="board ">
+    <div class="column" id="todo">
+      <h3>To Do</h3>
+    </div>
+    <div class="column" id="in-progress">
+      <h3>In Progress</h3>
+    </div>
+    <div class="column" id="done">
+      <h3>Done</h3>
+    </div>
+  </div>
+  <script src="todo.js"></script>
+  <script src="drag.js"></script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Board</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <button class="main-task--buton">Add Task</button>
+  <div class="tasks disabled">
+    <input type="text" id="new-task-title" placeholder="Yeni Görev">
+    <input type="file" id="new-task-image" accept="image/*">
+    <select id="new-task-status">
+      <option value="todo">To Do</option>
+      <option value="in-progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+    <button onclick="addTask()">Add</button>
+  </div>
+  <div class="board">
     <div class="column" id="todo">
       <h3>To Do</h3>
     </div>
