@@ -118,23 +118,32 @@ async function deleteTask(id) {
 }
 
 // 
-
 document.getElementById('add-column-btn').addEventListener('click', addColumn);
 
 function addColumn() {
   const columnName = prompt("Enter column name:");
   if (!columnName) return;
 
+  const columnId = columnName.toLowerCase().replace(/\s+/g, '-');
   const column = document.createElement('div');
   column.classList.add('column');
   column.innerHTML = `<h2>${columnName}</h2>`;
-  column.setAttribute('id', columnName.toLowerCase().replace(/\s+/g, '-'));
+  column.setAttribute('id', columnId);
 
   document.getElementById('board').appendChild(column);
   enableDragAndDrop(column);
+  addColumnToSelect(columnName, columnId);
 }
 
-function enableDragAndDrop(column) {
+function addColumnToSelect(columnName, columnId) {
+  const select = document.getElementById('new-task--status');
+  const option = document.createElement('option');
+  option.value = columnId;
+  option.text = columnName;
+  select.appendChild(option);
+}
+
+async function enableDragAndDrop(column) {
   column.addEventListener('dragover', (e) => {
     e.preventDefault();
     const mouseY = e.clientY;
@@ -150,4 +159,29 @@ function enableDragAndDrop(column) {
   column.addEventListener('drop', (e) => {
     e.preventDefault();
   });
+}
+
+   // Function to insert task at the correct position based on mouse position
+   function insertTaskAtPosition(zone, mouseY) {
+    const tasks = zone.querySelectorAll('.task:not(.is-dragging)');
+    let closestTask = null;
+    let closestOffset = Number.POSITIVE_INFINITY;
+
+    tasks.forEach(task => {
+        const { top, bottom } = task.getBoundingClientRect();
+        const offsetTop = mouseY - top;
+        const offsetBottom = bottom - mouseY;
+
+        if (offsetTop > 0 && offsetTop < closestOffset) {
+            closestTask = task.nextElementSibling;;
+            closestOffset = offsetTop;
+        }
+
+        if (offsetBottom > 0 && offsetBottom < closestOffset) {
+            closestTask = task;
+            closestOffset = offsetBottom;
+        }
+    });
+
+    return closestTask;
 }

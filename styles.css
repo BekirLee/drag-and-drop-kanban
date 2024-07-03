@@ -47,12 +47,13 @@
 
 .board {
   display: flex;
-  justify-content: space-around;
-  padding-top: 40px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
 }
 
 .column {
-  width: 30%;
+  width: 350px;
   padding: 10px;
   border: 2px solid #fff;
   border-radius: 5px;
