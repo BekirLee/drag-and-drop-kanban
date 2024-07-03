@@ -10,7 +10,7 @@
 
 <body>
   <button id="mainBtn" class="main-task--buton">Add Task</button>
-  <div class="tasks disabled">
+  <div id="mainTaskBox" class="tasks disabled">
     <input type="text" id="new-task-title" placeholder="Yeni Görev">
     <input type="file" id="new-task-image" accept="image/*">
     <select id="new-task-status">
@@ -20,7 +20,7 @@
     </select>
     <button onclick="addTask()">Add</button>
   </div>
-  <div class="board">
+  <div id="board" class="board">
     <div class="column" id="todo">
       <h3>To Do</h3>
     </div>
