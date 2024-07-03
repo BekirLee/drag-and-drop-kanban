@@ -8,17 +8,20 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="body-color">
   <button id="mainBtn" class="main-task--buton">Add Task</button>
+  <button id="add-column-btn">Add Column</button>
+  
   <div id="mainTaskBox" class="tasks disabled">
-    <input type="text" id="new-task-title" placeholder="Yeni Görev">
-    <input type="file" id="new-task-image" accept="image/*">
-    <select id="new-task-status">
+    <input type="text" id="new-task--title" placeholder="New task">
+    <input type="file" id="new-task--image" accept="image/*">
+    <br>
+    <select id="new-task--status">
       <option value="todo">To Do</option>
       <option value="in-progress">In Progress</option>
       <option value="done">Done</option>
     </select>
-    <button onclick="addTask()">Add</button>
+    <button class="add-button" onclick="addTask()">Add</button>
   </div>
   <div id="board" class="board">
     <div class="column" id="todo">
@@ -28,6 +31,9 @@
       <h3>In Progress</h3>
     </div>
     <div class="column" id="done">
+      <h3>Done</h3>
+    </div>
+    <div class="column" id="">
       <h3>Done</h3>
     </div>
   </div>
