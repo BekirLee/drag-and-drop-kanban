@@ -6,11 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kanban Board</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="todo.js" defer></script>
 </head>
 
 <body>
-  <button class="main-task--buton">Add Task</button>
+  <button id="mainBtn" class="main-task--buton">Add Task</button>
   <div class="tasks disabled">
     <input type="text" id="new-task-title" placeholder="Yeni Görev">
     <input type="file" id="new-task-image" accept="image/*">
@@ -32,6 +31,7 @@
       <h3>Done</h3>
     </div>
   </div>
+  <script src="todo.js"></script>
   <script src="drag.js"></script>
 </body>
 

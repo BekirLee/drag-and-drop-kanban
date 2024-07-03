@@ -1,0 +1,118 @@
+const mainBtn = document.querySelector('.main-task--buton');
+const mainTaskBox = document.querySelector('.tasks');
+const board = document.querySelector('.board');
+
+let isClicked = false;
+
+mainBtn.addEventListener('click', (e) => {
+  mainTaskBox.classList.toggle('disabled');
+  board.classList.toggle('background-overlay');
+  // 
+  if (isClicked) {
+    e.target.innerHTML = 'Add Task'
+  }
+  else {
+    e.target.innerHTML = 'Quit'
+  }
+  isClicked = !isClicked;
+})
+
+fetchTasks()
+
+async function addTask() {
+  const title = document.getElementById('new-task-title').value;
+  const image = document.getElementById('new-task-image').files[0];
+  const status = document.getElementById('new-task-status').value;
+
+  if (!title) {
+    alert("Task need!");
+    return;
+  }
+
+  const task = {
+    title: title,
+    status: status,
+    image: null
+  };
+
+  if (image) {
+    const reader = new FileReader();
+    reader.onload = async function (event) {
+      task.image = event.target.result;
+      const savedTask = await sendTaskToServer(task);
+      addTaskToBoard(savedTask);
+    }
+    reader.readAsDataURL(image);
+  } else {
+    const savedTask = await sendTaskToServer(task);
+    addTaskToBoard(savedTask);
+  }
+
+  document.getElementById('new-task-title').value = '';
+  document.getElementById('new-task-image').value = '';
+  document.getElementById('new-task-status').value = 'todo';
+}
+
+async function sendTaskToServer(task) {
+  try {
+    const response = await fetch('http://localhost:3000/progresses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    });
+    if (!response.ok) {
+      throw new Error('Error');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function addTaskToBoard(task) {
+  const taskDiv = document.createElement('div');
+  taskDiv.classList.add('task');
+  taskDiv.setAttribute('data-id', task.id);
+  taskDiv.setAttribute('draggable', true);
+  taskDiv.innerHTML = `
+    <h4>${task.title}</h4>
+    ${task.image ? `<img class='task-photo' src="${task.image}" />` : '---'}
+    <button onclick="deleteTask('${task.id}')">Delete</button>
+  `;
+  document.getElementById(task.status).appendChild(taskDiv);
+
+  dragStart();
+}
+
+async function fetchTasks() {
+  try {
+    const response = await fetch('http://localhost:3000/progresses');
+    if (!response.ok) {
+      throw new Error('Görevler alınırken hata oluştu');
+    }
+    const tasks = await response.json();
+    tasks.forEach(task => addTaskToBoard(task));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function deleteTask(id) {
+  try {
+    const response = await fetch(`http://localhost:3000/progresses/${id}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) {
+      throw new Error('Görev silinirken hata oluştu');
+    }
+    // Görevi DOM'dan kaldır
+    const taskDiv = document.querySelector(`.task[data-id='${id}']`);
+    if (taskDiv) {
+      taskDiv.remove();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
