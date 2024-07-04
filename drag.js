@@ -35,7 +35,4 @@ function dragStart() {
             e.preventDefault();
         });
     });
-
-
- 
 }

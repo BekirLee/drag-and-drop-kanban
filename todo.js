@@ -49,9 +49,9 @@ async function addTask() {
     addTaskToBoard(savedTask);
   }
 
-  document.getElementById('new-task-title').value = '';
-  document.getElementById('new-task-image').value = '';
-  document.getElementById('new-task-status').value = 'todo';
+  document.getElementById('new-task--title').value = '';
+  document.getElementById('new-task--image').value = '';
+  document.getElementById('new-task--status').value = 'todo';
 }
 
 async function sendTaskToServer(task) {
@@ -94,9 +94,10 @@ async function fetchTasks() {
       throw new Error('error');
     }
     const tasks = await response.json();
-    tasks.forEach(task => addTaskToBoard(task));
+    tasks.forEach(task => addTaskToBoard(task)),
+      console.log(tasks)
   } catch (error) {
-    console.error(error);
+    console.error('error var', error);
   }
 }
 
@@ -132,6 +133,8 @@ function addColumn() {
 
   document.getElementById('board').appendChild(column);
   enableDragAndDrop(column);
+  // console.log(enableDragAndDrop(column));
+
   addColumnToSelect(columnName, columnId);
 }
 
@@ -155,33 +158,40 @@ async function enableDragAndDrop(column) {
       column.insertBefore(curTask, bottomTask);
     }
   });
+  column.addEventListener('dragstart', () => {
+    console.log('hello')
+  })
+  column.addEventListener('dragend', () => {
+    console.log('end')
+  })
 
   column.addEventListener('drop', (e) => {
     e.preventDefault();
   });
 }
 
-   // Function to insert task at the correct position based on mouse position
-   function insertTaskAtPosition(zone, mouseY) {
-    const tasks = zone.querySelectorAll('.task:not(.is-dragging)');
-    let closestTask = null;
-    let closestOffset = Number.POSITIVE_INFINITY;
+// 
+// Function to insert task at the correct position based on mouse position
+function insertTaskAtPosition(zone, mouseY) {
+  const tasks = zone.querySelectorAll('.task:not(.is-dragging)');
+  let closestTask = null;
+  let closestOffset = Number.POSITIVE_INFINITY;
 
-    tasks.forEach(task => {
-        const { top, bottom } = task.getBoundingClientRect();
-        const offsetTop = mouseY - top;
-        const offsetBottom = bottom - mouseY;
+  tasks.forEach(task => {
+    const { top, bottom } = task.getBoundingClientRect();
+    const offsetTop = mouseY - top;
+    const offsetBottom = bottom - mouseY;
 
-        if (offsetTop > 0 && offsetTop < closestOffset) {
-            closestTask = task.nextElementSibling;;
-            closestOffset = offsetTop;
-        }
+    if (offsetTop > 0 && offsetTop < closestOffset) {
+      closestTask = task.nextElementSibling;;
+      closestOffset = offsetTop;
+    }
 
-        if (offsetBottom > 0 && offsetBottom < closestOffset) {
-            closestTask = task;
-            closestOffset = offsetBottom;
-        }
-    });
+    if (offsetBottom > 0 && offsetBottom < closestOffset) {
+      closestTask = task;
+      closestOffset = offsetBottom;
+    }
+  });
 
-    return closestTask;
+  return closestTask;
 }

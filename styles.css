@@ -34,7 +34,8 @@
   box-shadow: 0 1px 10px 0 rgba(0, 0, 0, .25);
 }
 
-.main-task--buton {
+.main-task--buton,
+.main-column--buton {
   position: relative;
   background-color: #5f55ee;
   border-radius: 6px;
@@ -58,6 +59,11 @@
   border: 2px solid #fff;
   border-radius: 5px;
   box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.1);
+}
+
+.column h3,
+h2 {
+  width: 350px;
 }
 
 .task {
