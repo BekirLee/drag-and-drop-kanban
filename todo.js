@@ -1,4 +1,4 @@
-// const mainBtn = document.querySelector('.main-task--buton');
+// const mainBtn = document.querySelector('.main-task--button');
 // const mainTaskBox = document.querySelector('.tasks');
 // const board = document.querySelector('.board');
 
@@ -16,17 +16,20 @@
 //   isClicked = !isClicked;
 // });
 
-// fetchTasks();
+// fetchColumnsAndTasks();
+
+// async function fetchColumnsAndTasks() {
+//   await fetchColumns();
+//   await fetchTasks();
+// }
 
 // async function addTask() {
 //   const title = document.getElementById('new-task--title').value;
 //   const image = document.getElementById('new-task--image').files[0];
 //   const status = document.getElementById('new-task--status').value;
 
-//   // const titleİnput = document.querySelector('.new-task--title');
-
 //   if (!title) {
-//     alert("Task need!");
+//     alert("Task title is required!");
 //     return;
 //   }
 
@@ -42,7 +45,7 @@
 //       task.image = event.target.result;
 //       const savedTask = await sendTaskToServer(task);
 //       addTaskToBoard(savedTask);
-//     }
+//     };
 //     reader.readAsDataURL(image);
 //   } else {
 //     const savedTask = await sendTaskToServer(task);
@@ -56,7 +59,7 @@
 
 // async function sendTaskToServer(task) {
 //   try {
-//     const response = await fetch('http://localhost:3000/progresses', {
+//     const response = await fetch('http://localhost:3000/progresses', {  // Make sure the endpoint is correct
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json'
@@ -64,7 +67,7 @@
 //       body: JSON.stringify(task)
 //     });
 //     if (!response.ok) {
-//       throw new Error('Error');
+//       throw new Error('Error saving task');
 //     }
 //     return await response.json();
 //   } catch (error) {
@@ -82,7 +85,6 @@
 //     ${task.image ? `<img class='task-photo' src="${task.image}" />` : '---'}
 //     <button onclick="deleteTask('${task.id}')">Delete</button>
 //   `;
-//   console.log(task.status)
 //   document.getElementById(task.status).appendChild(taskDiv);
 
 //   dragStart();
@@ -90,25 +92,24 @@
 
 // async function fetchTasks() {
 //   try {
-//     const response = await fetch('http://localhost:3000/progresses');
+//     const response = await fetch('http://localhost:3000/progresses');  // Make sure the endpoint is correct
 //     if (!response.ok) {
-//       throw new Error('error');
+//       throw new Error('Error fetching tasks');
 //     }
 //     const tasks = await response.json();
-//     tasks.forEach(task => addTaskToBoard(task)),
-//       console.log(tasks)
+//     tasks.forEach(task => addTaskToBoard(task));
 //   } catch (error) {
-//     console.error('error var', error);
+//     console.error('Error fetching tasks', error);
 //   }
 // }
 
 // async function deleteTask(id) {
 //   try {
-//     const response = await fetch(`http://localhost:3000/progresses/${id}`, {
+//     const response = await fetch(`http://localhost:3000/progresses/${id}`, {  // Make sure the endpoint is correct
 //       method: 'DELETE'
 //     });
 //     if (!response.ok) {
-//       throw new Error('Görev silinirken hata oluştu');
+//       throw new Error('Error deleting task');
 //     }
 //     const taskDiv = document.querySelector(`.task[data-id='${id}']`);
 //     if (taskDiv) {
@@ -119,24 +120,61 @@
 //   }
 // }
 
-// // 
 // document.getElementById('add-column-btn').addEventListener('click', addColumn);
 
-// function addColumn() {
+// async function addColumn() {
 //   const columnName = prompt("Enter column name:");
 //   if (!columnName) return;
 
-//   const columnId = columnName.toLowerCase().replace(/\s+/g, '-');
-//   const column = document.createElement('div');
-//   column.classList.add('column');
-//   column.innerHTML = `<h2>${columnName}</h2>`;
-//   column.setAttribute('id', columnId);
+//   const column = {
+//     title: columnName
+//   };
 
-//   document.getElementById('board').appendChild(column);
-//   enableDragAndDrop(column);
-//   // console.log(enableDragAndDrop(column));
+//   const savedColumn = await saveColumnToServer(column);
+//   addColumnToBoard(savedColumn);
+//   addColumnToSelect(savedColumn.title, savedColumn.id);
+// }
 
-//   addColumnToSelect(columnName, columnId);
+// async function saveColumnToServer(column) {
+//   try {
+//     const response = await fetch('http://localhost:3000/columns', {  // Make sure the endpoint is correct
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(column)
+//     });
+//     if (!response.ok) {
+//       throw new Error('Error saving column');
+//     }
+//     return await response.json();
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+
+// async function fetchColumns() {
+//   try {
+//     const response = await fetch('http://localhost:3000/columns');  // Make sure the endpoint is correct
+//     if (!response.ok) {
+//       throw new Error('Error fetching columns');
+//     }
+//     const columns = await response.json();
+//     columns.forEach(column => {
+//       addColumnToSelect(column.title, column.id);
+//     });
+//   } catch (error) {
+//     console.error('Error fetching columns', error);
+//   }
+// }
+
+// function addColumnToBoard(column) {
+//   const columnDiv = document.createElement('div');
+//   columnDiv.classList.add('column');
+//   columnDiv.setAttribute('id', column.id);
+//   columnDiv.innerHTML = `<h2>${column.title}</h2>`;
+//   document.getElementById('board').appendChild(columnDiv);
+//   enableDragAndDrop(columnDiv);
 // }
 
 // function addColumnToSelect(columnName, columnId) {
@@ -159,37 +197,12 @@
 //       column.insertBefore(curTask, bottomTask);
 //     }
 //   });
-//   column.addEventListener('dragstart', () => {
-//     console.log('hello')
-//   })
-//   column.addEventListener('dragend', () => {
-//     console.log('end')
-//   })
 
 //   column.addEventListener('drop', (e) => {
 //     e.preventDefault();
 //   });
 // }
 
-// // async function saveColumnToServer(column) {
-// //   try {
-// //     const response = await fetch('http://localhost:3000/columns', {
-// //       method: 'POST',
-// //       headers: {
-// //         'Content-Type': 'application/json'
-// //       },
-// //       body: JSON.stringify(column)
-// //     });
-// //     if (!response.ok) {
-// //       throw new Error('Error saving column');
-// //     }
-// //   } catch (error) {
-// //     console.error(error);
-// //   }
-// // }
-
-// // 
-// // Function to insert task at the correct position based on mouse position
 // function insertTaskAtPosition(zone, mouseY) {
 //   const tasks = zone.querySelectorAll('.task:not(.is-dragging)');
 //   let closestTask = null;
@@ -201,7 +214,7 @@
 //     const offsetBottom = bottom - mouseY;
 
 //     if (offsetTop > 0 && offsetTop < closestOffset) {
-//       closestTask = task.nextElementSibling;;
+//       closestTask = task.nextElementSibling;
 //       closestOffset = offsetTop;
 //     }
 
@@ -214,8 +227,7 @@
 //   return closestTask;
 // }
 
-
-const mainBtn = document.querySelector('.main-task--buton');
+const mainBtn = document.querySelector('.main-task--button');
 const mainTaskBox = document.querySelector('.tasks');
 const board = document.querySelector('.board');
 
@@ -276,7 +288,7 @@ async function addTask() {
 
 async function sendTaskToServer(task) {
   try {
-    const response = await fetch('http://localhost:3000/progresses', {
+    const response = await fetch('http://localhost:3000/progresses', {  // Make sure the endpoint is correct
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -309,7 +321,7 @@ function addTaskToBoard(task) {
 
 async function fetchTasks() {
   try {
-    const response = await fetch('http://localhost:3000/progresses');
+    const response = await fetch('http://localhost:3000/progresses');  // Make sure the endpoint is correct
     if (!response.ok) {
       throw new Error('Error fetching tasks');
     }
@@ -322,7 +334,7 @@ async function fetchTasks() {
 
 async function deleteTask(id) {
   try {
-    const response = await fetch(`http://localhost:3000/progresses/${id}`, {
+    const response = await fetch(`http://localhost:3000/progresses/${id}`, {  // Make sure the endpoint is correct
       method: 'DELETE'
     });
     if (!response.ok) {
@@ -343,11 +355,8 @@ async function addColumn() {
   const columnName = prompt("Enter column name:");
   if (!columnName) return;
 
-  // const columnId = columnName.toLowerCase().replace(/\s+/g, '-');
   const column = {
-    // title: 'columnName',
-    status: columnName,
-    // image: null
+    title: columnName
   };
 
   const savedColumn = await saveColumnToServer(column);
@@ -357,7 +366,7 @@ async function addColumn() {
 
 async function saveColumnToServer(column) {
   try {
-    const response = await fetch('http://localhost:3000/progresses', {
+    const response = await fetch('http://localhost:3000/columns', {  // Make sure the endpoint is correct
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -375,13 +384,12 @@ async function saveColumnToServer(column) {
 
 async function fetchColumns() {
   try {
-    const response = await fetch('http://localhost:3000/progresses');
+    const response = await fetch('http://localhost:3000/columns');  // Make sure the endpoint is correct
     if (!response.ok) {
       throw new Error('Error fetching columns');
     }
     const columns = await response.json();
     columns.forEach(column => {
-      // addColumnToBoard(column);
       addColumnToSelect(column.title, column.id);
     });
   } catch (error) {
@@ -392,10 +400,11 @@ async function fetchColumns() {
 function addColumnToBoard(column) {
   const columnDiv = document.createElement('div');
   columnDiv.classList.add('column');
-  // columnDiv.setAttribute('id', column.id);
-  columnDiv.innerHTML = `<h2>${column.status}</h2>`;
+  columnDiv.setAttribute('id', column.id);
+  columnDiv.setAttribute('draggable', true); // Enable dragging for columns
+  columnDiv.innerHTML = `<h2>${column.title}</h2>`;
   document.getElementById('board').appendChild(columnDiv);
-  enableDragAndDrop(columnDiv);
+  enableDragAndDrop();
 }
 
 function addColumnToSelect(columnName, columnId) {
@@ -406,44 +415,48 @@ function addColumnToSelect(columnName, columnId) {
   select.appendChild(option);
 }
 
-async function enableDragAndDrop(column) {
-  column.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const mouseY = e.clientY;
-    const bottomTask = insertTaskAtPosition(column, mouseY);
-    const curTask = document.querySelector('.is-dragging');
-    if (!bottomTask) {
-      column.appendChild(curTask);
-    } else {
-      column.insertBefore(curTask, bottomTask);
-    }
-  });
+function enableDragAndDrop() {
+  const columns = document.querySelectorAll('.column');
 
-  column.addEventListener('drop', (e) => {
-    e.preventDefault();
+  columns.forEach(column => {
+
+    column.addEventListener('dragstart', (e) => {
+      e.target.classList.add('is-dragging');
+      console.log('drag start')
+    });
+
+    column.addEventListener('dragend', (e) => {
+      e.target.classList.remove('is-dragging');
+    })
+
+    column.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const mouseY = e.clientY;
+      const draggingElement = document.querySelector('.is-dragging');
+      const afterElement = getDragAfterElement(element, mouseY);
+      if (afterElement == null) {
+        column.appendChild(draggingElement);
+      } else {
+        column.insertBefore(draggingElement, afterElement);
+      }
+    });
+
+    column.addEventListener('drop', (e) => {
+      e.preventDefault();
+    });
   });
 }
 
-function insertTaskAtPosition(zone, mouseY) {
-  const tasks = zone.querySelectorAll('.task:not(.is-dragging)');
-  let closestTask = null;
-  let closestOffset = Number.POSITIVE_INFINITY;
+function getDragAfterElement(container, mouseY) {
+  const draggableElements = [...container.querySelectorAll('.task:not(.is-dragging)')];
 
-  tasks.forEach(task => {
-    const { top, bottom } = task.getBoundingClientRect();
-    const offsetTop = mouseY - top;
-    const offsetBottom = bottom - mouseY;
-
-    if (offsetTop > 0 && offsetTop < closestOffset) {
-      closestTask = task.nextElementSibling;
-      closestOffset = offsetTop;
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = mouseY - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
     }
-
-    if (offsetBottom > 0 && offsetBottom < closestOffset) {
-      closestTask = task;
-      closestOffset = offsetBottom;
-    }
-  });
-
-  return closestTask;
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
