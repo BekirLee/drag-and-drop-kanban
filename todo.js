@@ -273,5 +273,4 @@ function getTaskAfterElement(container, mouseY) {
 }
 
 
-// document.querySelectorAll('.task').forEach(task => enableTaskDragAndDrop(task));
 document.querySelectorAll('.column').forEach(column => enableColumnDragAndDrop(column));

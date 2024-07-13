@@ -1,7 +1,7 @@
 // function dragStart() {
 
-    // const tasks = document.querySelectorAll('.task');
-    // const droppables = document.querySelectorAll('.column');
+// const tasks = document.querySelectorAll('.task');
+// const droppables = document.querySelectorAll('.column');
 
 //     // Drag event listeners
 //     tasks.forEach(task => {
@@ -37,21 +37,3 @@
 //     });
 // }
 
-// function dragStart() {
-//     const tasks = document.querySelectorAll('.task');
-//     const columns = document.querySelectorAll('.column');
-
-//     tasks.forEach(task => {
-//         task.addEventListener('dragstart', () => {
-//             task.classList.add('is-dragging');
-//         });
-
-//         task.addEventListener('dragend', () => {
-//             task.classList.remove('is-dragging');
-//         });
-//     });
-
-//     columns.forEach(column => {
-//         enableDragAndDrop(column);
-//     });
-// }
