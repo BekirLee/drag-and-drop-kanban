@@ -258,7 +258,6 @@ function enableTaskDragAndDrop() {
 }
 
 function getTaskAfterElement(container, mouseY) {
-  // Yalnızca görev (`task`) elemanlarını seç
   const tasks = [...container.querySelectorAll('.task:not(.is-dragging)')].filter(task => !task.querySelectorAll('img'));
 
   return tasks.reduce((closest, task) => {
