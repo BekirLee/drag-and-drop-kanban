@@ -280,51 +280,26 @@ async function enableTaskDragAndDrop() {
       e.preventDefault();
       const draggingTask = document.querySelector('.is-dragging');
       const column = e.target.closest('.column');
-      console.log(column)
 
-      // Hedef sütunun mevcut olup olmadığını kontrol et
       if (!column) {
         console.error('Drop target is not a column');
         return;
       }
 
-      const newColumnId = column.id;
-      const container = column.querySelector('.tasks-container');
-      console.log(container)
-
-      // Konteynerin mevcut olup olmadığını kontrol et
-      if (!container) {
-        console.error('Tasks container is not found in the column');
-        return;
-      }
-
-      const afterTask = getTaskAfterElement(container, e.clientY);
+      // Görevlerin doğrudan sütuna ekleneceği kod
+      const afterTask = getTaskAfterElement(column, e.clientY);
 
       if (!afterTask) {
-        container.appendChild(draggingTask);
+        column.appendChild(draggingTask);
       } else {
-        container.insertBefore(draggingTask, afterTask);
+        column.insertBefore(draggingTask, afterTask);
       }
 
-      // Update task status in the server
       const taskId = draggingTask.getAttribute('data-id');
-      await updateTaskStatus(taskId, newColumnId);
+      const newStatus = column.id; // Sütun ID'sini kullanarak durum güncellemesi
+      await updateTaskStatus(taskId, newStatus);
     });
   });
-}
-
-async function updateTaskStatus(taskId, newStatus) {
-  try {
-    await fetch(`http://localhost:3000/progresses/${taskId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ status: newStatus })
-    });
-  } catch (error) {
-    console.error('Error updating task status', error);
-  }
 }
 
 function getTaskAfterElement(container, mouseY) {
@@ -340,6 +315,28 @@ function getTaskAfterElement(container, mouseY) {
     }
   }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
+
+async function updateTaskStatus(taskId, newStatus) {
+  try {
+    const response = await fetch(`http://localhost:3000/progresses/${taskId}`, {
+      method: 'PATCH', // veya PUT
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status: newStatus })
+    });
+
+    if (!response.ok) {
+      throw new Error('Error updating task status');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 
 
 // const mainBtn = document.querySelector('.main-task--button');
