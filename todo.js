@@ -79,15 +79,19 @@ function addTaskToBoard(task) {
   const taskDiv = document.createElement('div');
   taskDiv.classList.add('task');
   taskDiv.setAttribute('data-id', task.id);
-  taskDiv.setAttribute('draggable', true);
+  taskDiv.setAttribute('draggable', true); // Make task draggable
   taskDiv.innerHTML = `
     <h4>${task.title}</h4>
     ${task.image ? `<img class='task-photo' src="${task.image}" />` : '---'}
     <button onclick="deleteTask('${task.id}')">Delete</button>
   `;
-  document.getElementById(task.status).appendChild(taskDiv);
-
-  enableTaskDragAndDrop();
+  const taskContainer = document.getElementById(task.status).querySelector('.tasks-container');
+  if (taskContainer) {
+    taskContainer.appendChild(taskDiv);
+    enableTaskDragAndDrop(taskDiv);
+  } else {
+    console.error(`No tasks-container found in column with ID ${task.status}`);
+  }
 }
 
 async function fetchTasks() {
@@ -160,6 +164,7 @@ async function fetchColumns() {
       console.log('Error fetching columns');
     }
     const columns = await response.json();
+    console.log(columns);
     columns.forEach(column => {
       addColumnToBoard(column);
       addColumnToSelect(column.title, column.id);
@@ -173,7 +178,6 @@ function addColumnToBoard(column) {
   const columnDiv = document.createElement('div');
   columnDiv.classList.add('column');
   columnDiv.setAttribute('id', column.id);
-  columnDiv.setAttribute('draggable', true);
   columnDiv.innerHTML = `<h2>${column.title}</h2><div class="tasks-container"></div>`;
   board.appendChild(columnDiv);
   enableColumnDragAndDrop(columnDiv);
@@ -187,104 +191,39 @@ function addColumnToSelect(columnName, columnId) {
   select.appendChild(option);
 }
 
-function enableColumnDragAndDrop(column) {
-  column.addEventListener('dragstart', (e) => {
+function enableTaskDragAndDrop(task) {
+  task.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', e.target.dataset.id);
     e.target.classList.add('is-dragging');
   });
 
-  column.addEventListener('dragend', (e) => {
+  task.addEventListener('dragend', (e) => {
     e.target.classList.remove('is-dragging');
   });
+}
 
+function enableColumnDragAndDrop(column) {
   column.addEventListener('dragover', (e) => {
     e.preventDefault();
-    const mouseX = e.clientX;
-    const draggingColumn = document.querySelector('.is-dragging');
-    const afterColumn = getColumnAfterElement(mouseX);
-    if (!afterColumn) {
-      board.appendChild(draggingColumn);
-    } else {
-      board.insertBefore(draggingColumn, afterColumn);
+    const taskBeingDragged = document.querySelector('.is-dragging');
+    if (taskBeingDragged) {
+      const taskContainer = column.querySelector('.tasks-container');
+      if (taskContainer && taskContainer.children.length > 0) {
+        taskContainer.appendChild(taskBeingDragged);
+      }
     }
   });
 
   column.addEventListener('drop', (e) => {
     e.preventDefault();
-  });
-}
-
-function getColumnAfterElement(mouseX) {
-  const columns = [...board.querySelectorAll('.column:not(.is-dragging)')];
-  return columns.reduce((closest, column) => {
-    const box = column.getBoundingClientRect();
-    const offset = mouseX - box.left - box.width / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: column };
-    } else {
-      return closest;
+    const taskId = e.dataTransfer.getData('text/plain');
+    const taskBeingDragged = document.querySelector(`.task[data-id='${taskId}']`);
+    const taskContainer = column.querySelector('.tasks-container');
+    if (taskContainer && taskContainer.children.length > 0) {
+      taskContainer.appendChild(taskBeingDragged);
+      updateTaskStatus(taskId, column.id);
     }
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
-
-function enableTaskDragAndDrop() {
-  const tasks = document.querySelectorAll('.task');
-  tasks.forEach(task => {
-    task.addEventListener('dragstart', (e) => {
-      e.target.classList.add('is-dragging');
-    });
-
-    task.addEventListener('dragend', async (e) => {
-      e.target.classList.remove('is-dragging');
-    });
-
-    task.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-
-    task.addEventListener('drop', async (e) => {
-      e.preventDefault();
-      const draggingTask = document.querySelector('.is-dragging');
-      let column = e.target.closest('.column');
-
-      if (!column) {
-        let parent = e.target;
-        while (parent && !parent.classList.contains('column')) {
-          parent = parent.parentElement;
-        }
-        column = parent;
-      }
-
-      if (!column) {
-        console.error('Drop target is not a column');
-        return;
-      }
-
-      const afterTask = getTaskAfterElement(column, e.clientY);
-
-      if (!afterTask) {
-        column.appendChild(draggingTask);
-      } else {
-        column.insertBefore(draggingTask, afterTask);
-      }
-
-      const taskId = draggingTask.getAttribute('data-id');
-      const newStatus = column.id;
-      await updateTaskStatus(taskId, newStatus);
-    });
   });
-}
-
-function getTaskAfterElement(container, mouseY) {
-  const tasks = [...container.querySelectorAll('.task:not(.is-dragging)')];
-  return tasks.reduce((closest, task) => {
-    const box = task.getBoundingClientRect();
-    const offset = mouseY - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: task };
-    } else {
-      return closest;
-    }
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
 async function updateTaskStatus(taskId, newStatus) {
@@ -296,16 +235,21 @@ async function updateTaskStatus(taskId, newStatus) {
       },
       body: JSON.stringify({ status: newStatus })
     });
-
     if (!response.ok) {
       throw new Error('Error updating task status');
     }
-
-    return await response.json();
   } catch (error) {
-    console.error(error);
+    console.error('Error updating task status', error);
   }
 }
+
+document.addEventListener('dragover', (e) => {
+  e.preventDefault();
+});
+
+document.addEventListener('drop', (e) => {
+  e.preventDefault();
+});
 
 
 
