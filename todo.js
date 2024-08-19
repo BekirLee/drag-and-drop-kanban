@@ -87,7 +87,7 @@ function addTaskToBoard(task) {
   `;
   document.getElementById(task.status).appendChild(taskDiv);
 
-  enableTaskDragAndDrop(taskDiv);
+  enableTaskDragAndDrop();
 }
 
 async function fetchTasks() {
@@ -175,7 +175,7 @@ function addColumnToBoard(column) {
   columnDiv.setAttribute('id', column.id);
   columnDiv.setAttribute('draggable', true);
   columnDiv.innerHTML = `<h2>${column.title}</h2><div class="tasks-container"></div>`;
-  document.getElementById('board').appendChild(columnDiv);
+  board.appendChild(columnDiv);
   enableColumnDragAndDrop(columnDiv);
 }
 
@@ -228,40 +228,6 @@ function getColumnAfterElement(mouseX) {
 
 function enableTaskDragAndDrop() {
   const tasks = document.querySelectorAll('.task');
-  // console.log(tasks)
-  tasks.forEach(task => {
-    console.log(task)
-    task.addEventListener('dragstart', (e) => {
-      e.target.classList.add('is-dragging');
-    });
-
-    task.addEventListener('dragend', (e) => {
-      e.target.classList.remove('is-dragging');
-      console.log('end')
-    });
-
-    task.addEventListener('dragover', (e) => {
-      e.preventDefault();
-
-    });
-
-    task.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const mouseY = e.clientY;
-      const draggingTask = document.querySelector('.is-dragging');
-      const afterTask = getTaskAfterElement(task.parentElement, mouseY);
-      if (!afterTask) {
-        task.parentElement.appendChild(draggingTask);
-      } else {
-        task.parentElement.insertBefore(draggingTask, afterTask);
-      }
-    });
-  })
-}
-
-async function enableTaskDragAndDrop() {
-  const tasks = document.querySelectorAll('.task');
-
   tasks.forEach(task => {
     task.addEventListener('dragstart', (e) => {
       e.target.classList.add('is-dragging');
@@ -269,7 +235,6 @@ async function enableTaskDragAndDrop() {
 
     task.addEventListener('dragend', async (e) => {
       e.target.classList.remove('is-dragging');
-      console.log('end');
     });
 
     task.addEventListener('dragover', (e) => {
@@ -279,14 +244,21 @@ async function enableTaskDragAndDrop() {
     task.addEventListener('drop', async (e) => {
       e.preventDefault();
       const draggingTask = document.querySelector('.is-dragging');
-      const column = e.target.closest('.column');
+      let column = e.target.closest('.column');
+
+      if (!column) {
+        let parent = e.target;
+        while (parent && !parent.classList.contains('column')) {
+          parent = parent.parentElement;
+        }
+        column = parent;
+      }
 
       if (!column) {
         console.error('Drop target is not a column');
         return;
       }
 
-      // Görevlerin doğrudan sütuna ekleneceği kod
       const afterTask = getTaskAfterElement(column, e.clientY);
 
       if (!afterTask) {
@@ -296,7 +268,7 @@ async function enableTaskDragAndDrop() {
       }
 
       const taskId = draggingTask.getAttribute('data-id');
-      const newStatus = column.id; // Sütun ID'sini kullanarak durum güncellemesi
+      const newStatus = column.id;
       await updateTaskStatus(taskId, newStatus);
     });
   });
@@ -304,7 +276,6 @@ async function enableTaskDragAndDrop() {
 
 function getTaskAfterElement(container, mouseY) {
   const tasks = [...container.querySelectorAll('.task:not(.is-dragging)')];
-
   return tasks.reduce((closest, task) => {
     const box = task.getBoundingClientRect();
     const offset = mouseY - box.top - box.height / 2;
@@ -319,7 +290,7 @@ function getTaskAfterElement(container, mouseY) {
 async function updateTaskStatus(taskId, newStatus) {
   try {
     const response = await fetch(`http://localhost:3000/progresses/${taskId}`, {
-      method: 'PATCH', // veya PUT
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
