@@ -168,6 +168,13 @@ async function fetchColumns() {
     columns.forEach(column => {
       addColumnToBoard(column);
       addColumnToSelect(column.title, column.id);
+      // fetch(`http://localhost:3000/progresses?status=${column.id}`)
+      // .then(res => res.json())
+      // .then(tasks => {
+
+      // tasks.forEach(task => addTaskToBoard(task));
+      // })
+
     });
   } catch (error) {
     console.error('Error fetching columns', error);
@@ -199,30 +206,47 @@ function enableTaskDragAndDrop(task) {
 
   task.addEventListener('dragend', (e) => {
     e.target.classList.remove('is-dragging');
+    // e.toElement.children[1].style.cursor = 'none'
   });
 }
 
 function enableColumnDragAndDrop(column) {
+  console.log(column)
   column.addEventListener('dragover', (e) => {
     e.preventDefault();
-    const taskBeingDragged = document.querySelector('.is-dragging');
-    if (taskBeingDragged) {
-      const taskContainer = column.querySelector('.tasks-container');
-      if (taskContainer && taskContainer.children.length > 0) {
-        taskContainer.appendChild(taskBeingDragged);
-      }
-    }
+    console.log('over')
+    // const taskBeingDragged = document.querySelector('.is-dragging');
+
+    // if (taskBeingDragged) {
+    //   const taskContainer = column.querySelector('.tasks-container');
+    //   if (taskContainer && taskContainer.children.length > 0) {
+    //     taskContainer.appendChild(taskBeingDragged);
+    //   }
+    // }
   });
 
   column.addEventListener('drop', (e) => {
     e.preventDefault();
-    const taskId = e.dataTransfer.getData('text/plain');
-    const taskBeingDragged = document.querySelector(`.task[data-id='${taskId}']`);
-    const taskContainer = column.querySelector('.tasks-container');
-    if (taskContainer && taskContainer.children.length > 0) {
-      taskContainer.appendChild(taskBeingDragged);
-      updateTaskStatus(taskId, column.id);
+
+    const dragging = document.querySelector('.is-dragging');
+    if (dragging) {
+      column.appendChild(dragging)
     }
+    // const id = e.dataTransfer.getData('text/plain')
+    // console.log(id)
+    // const task = document.getElementById(id);
+    // console.log(task)
+    // if (task) {
+    //   column.appendChild(task)
+    // }
+
+    // const taskId = e.dataTransfer.getData('text/plain');
+    // const taskBeingDragged = document.querySelector(`.task[data-id='${taskId}']`);
+    // const taskContainer = column.querySelector('.tasks-container');
+    // if (taskContainer && taskContainer.children.length > 0) {
+    //   taskContainer.appendChild(taskBeingDragged);
+    //   updateTaskStatus(taskId, column.id);
+    // }
   });
 }
 
@@ -243,13 +267,15 @@ async function updateTaskStatus(taskId, newStatus) {
   }
 }
 
-document.addEventListener('dragover', (e) => {
-  e.preventDefault();
-});
 
-document.addEventListener('drop', (e) => {
-  e.preventDefault();
-});
+
+// document.addEventListener('dragover', (e) => {
+//   e.preventDefault();
+// });
+
+// document.addEventListener('drop', (e) => {
+//   e.preventDefault();
+// });
 
 
 

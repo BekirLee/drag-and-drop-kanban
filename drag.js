@@ -31,7 +31,7 @@
 //             }
 //         });
 
-//         zone.addEventListener('drop', e => {
+//         zone.addEventListener('drop', e => {undefined
 //             e.preventDefault();
 //         });
 //     });
