@@ -1,40 +1,40 @@
-// function dragStart() {
+function dragStart() {
 
-// const tasks = document.querySelectorAll('.task');
-// const droppables = document.querySelectorAll('.column');
+const tasks = document.querySelectorAll('.task');
+const droppables = document.querySelectorAll('.column');
 
-//     // Drag event listeners
-//     tasks.forEach(task => {
-//         task.addEventListener('dragstart', () => {
-//             task.classList.add('is-dragging');
-//         });
+    // Drag event listeners
+    tasks.forEach(task => {
+        task.addEventListener('dragstart', () => {
+            task.classList.add('is-dragging');
+        });
 
-//         task.addEventListener('dragend', () => {
-//             task.classList.remove('is-dragging');
-//         });
-//     });
+        task.addEventListener('dragend', () => {
+            task.classList.remove('is-dragging');
+        });
+    });
 
-//     droppables.forEach(zone => {
-//         zone.addEventListener('dragover', e => {
-//             e.preventDefault();
+    droppables.forEach(zone => {
+        zone.addEventListener('dragover', e => {
+            e.preventDefault();
 
-//             const mouseY = e.clientY;
-//             // console.log(mouseY)
-//             const bottomTask = insertTaskAtPosition(zone, mouseY);
-//             const curTask = document.querySelector('.is-dragging');
+            const mouseY = e.clientY;
+            // console.log(mouseY)
+            const bottomTask = insertTaskAtPosition(zone, mouseY);
+            const curTask = document.querySelector('.is-dragging');
 
-//             if (!bottomTask) {
-//                 zone.appendChild(curTask);
-//             } else {
-//                 zone.insertBefore(curTask, bottomTask);
-//                 console.log(bottomTask)
-//             }
-//         });
+            if (!bottomTask) {
+                zone.appendChild(curTask);
+            } else {
+                zone.insertBefore(curTask, bottomTask);
+                console.log(bottomTask)
+            }
+        });
 
-//         zone.addEventListener('drop', e => {undefined
-//             e.preventDefault();
-//         });
-//     });
-// }
+        zone.addEventListener('drop', e => {undefined
+            e.preventDefault();
+        });
+    });
+}
 
 

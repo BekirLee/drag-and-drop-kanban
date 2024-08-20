@@ -168,13 +168,6 @@ async function fetchColumns() {
     columns.forEach(column => {
       addColumnToBoard(column);
       addColumnToSelect(column.title, column.id);
-      // fetch(`http://localhost:3000/progresses?status=${column.id}`)
-      // .then(res => res.json())
-      // .then(tasks => {
-
-      // tasks.forEach(task => addTaskToBoard(task));
-      // })
-
     });
   } catch (error) {
     console.error('Error fetching columns', error);
@@ -185,6 +178,7 @@ function addColumnToBoard(column) {
   const columnDiv = document.createElement('div');
   columnDiv.classList.add('column');
   columnDiv.setAttribute('id', column.id);
+  columnDiv.setAttribute('draggable', true)
   columnDiv.innerHTML = `<h2>${column.title}</h2><div class="tasks-container"></div>`;
   board.appendChild(columnDiv);
   enableColumnDragAndDrop(columnDiv);
@@ -206,23 +200,21 @@ function enableTaskDragAndDrop(task) {
 
   task.addEventListener('dragend', (e) => {
     e.target.classList.remove('is-dragging');
-    // e.toElement.children[1].style.cursor = 'none'
   });
+
+  dragStart();
 }
 
 function enableColumnDragAndDrop(column) {
   console.log(column)
+
+  column.addEventListener('dragstart', (e) => {
+    console.log('start')
+  })
+
   column.addEventListener('dragover', (e) => {
     e.preventDefault();
     console.log('over')
-    // const taskBeingDragged = document.querySelector('.is-dragging');
-
-    // if (taskBeingDragged) {
-    //   const taskContainer = column.querySelector('.tasks-container');
-    //   if (taskContainer && taskContainer.children.length > 0) {
-    //     taskContainer.appendChild(taskBeingDragged);
-    //   }
-    // }
   });
 
   column.addEventListener('drop', (e) => {
@@ -232,21 +224,6 @@ function enableColumnDragAndDrop(column) {
     if (dragging) {
       column.appendChild(dragging)
     }
-    // const id = e.dataTransfer.getData('text/plain')
-    // console.log(id)
-    // const task = document.getElementById(id);
-    // console.log(task)
-    // if (task) {
-    //   column.appendChild(task)
-    // }
-
-    // const taskId = e.dataTransfer.getData('text/plain');
-    // const taskBeingDragged = document.querySelector(`.task[data-id='${taskId}']`);
-    // const taskContainer = column.querySelector('.tasks-container');
-    // if (taskContainer && taskContainer.children.length > 0) {
-    //   taskContainer.appendChild(taskBeingDragged);
-    //   updateTaskStatus(taskId, column.id);
-    // }
   });
 }
 
@@ -266,7 +243,73 @@ async function updateTaskStatus(taskId, newStatus) {
     console.error('Error updating task status', error);
   }
 }
+function dragStart() {
+  const tasks = document.querySelectorAll('.task');
+  const droppables = document.querySelectorAll('.column');
 
+  // Drag event listeners
+  tasks.forEach(task => {
+    task.addEventListener('dragstart', () => {
+      task.classList.add('is-dragging');
+    });
+
+    task.addEventListener('dragend', () => {
+      task.classList.remove('is-dragging');
+    });
+  });
+
+  droppables.forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+
+      const curTask = document.querySelector('.is-dragging');
+      const afterElement = getDragAfterElement(zone, e.clientY);
+
+      if (afterElement == null) {
+        zone.querySelector('.tasks-container').appendChild(curTask);
+      } else {
+        zone.querySelector('.tasks-container').insertBefore(curTask, afterElement);
+      }
+    });
+
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+
+      const draggingTask = document.querySelector('.is-dragging');
+      const newStatus = zone.id;
+
+      if (draggingTask) {
+        const afterElement = getDragAfterElement(zone, e.clientY);
+
+        if (afterElement == null) {
+          zone.querySelector('.tasks-container').appendChild(draggingTask);
+        } else {
+          zone.querySelector('.tasks-container').insertBefore(draggingTask, afterElement);
+        }
+
+        updateTaskStatus(draggingTask.dataset.id, newStatus);
+      }
+    });
+  });
+}
+
+function getDragAfterElement(zone, mouseY) {
+  const tasks = [...zone.querySelectorAll('.task:not(.is-dragging)')];
+
+  return tasks.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = mouseY - box.top - box.height / 2;
+
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+
+// Diğer fonksiyonlar aynı kalacak
 
 
 // document.addEventListener('dragover', (e) => {
